@@ -4,7 +4,7 @@ connection.
 """
 
 import os
-"""from models.base_model import BaseModel"""
+from models.base_model import Base
 from models.amenity import Amenity
 from models.city import City
 from models.place import Place
@@ -13,7 +13,6 @@ from models.review import Review
 from models.user import User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-
 name2class = {
     'Amenity': Amenity,
     'City': City,
@@ -38,7 +37,6 @@ class DBStorage:
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
                                       .format(user, passwd, host, database))
         if os.getenv('HBNB_ENV') == 'test':
-            from models.base_model import Base
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -61,7 +59,6 @@ class DBStorage:
         """reloads objects from the database"""
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
-        from models.base_model import Base
         Base.metadata.create_all(self.__engine)
         self.__session = scoped_session(session_factory)
 
